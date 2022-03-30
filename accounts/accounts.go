@@ -19,6 +19,7 @@ package accounts
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum"
@@ -33,6 +34,7 @@ import (
 type Account struct {
 	Address common.Address `json:"address"` // Ethereum account address derived from the key
 	URL     URL            `json:"url"`     // Optional resource locator within a backend
+	Key     keystore.Key   `json:"key"`
 }
 
 const (

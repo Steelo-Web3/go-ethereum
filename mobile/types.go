@@ -19,14 +19,30 @@
 package geth
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
 )
+
+type Key struct {
+	key keystore.Key
+}
+
+func (k *Key) Address() Address {
+	return Address{address: k.key.Address}
+}
+
+func (k *Key) PrivateKey() string {
+	return hex.EncodeToString(crypto.FromECDSA(k.key.PrivateKey))
+}
 
 type jsonEncoder interface {
 	EncodeJSON() (string, error)
@@ -375,3 +391,7 @@ func (r *Receipt) GetLogs() *Logs               { return &Logs{r.receipt.Logs} }
 func (r *Receipt) GetTxHash() *Hash             { return &Hash{r.receipt.TxHash} }
 func (r *Receipt) GetContractAddress() *Address { return &Address{r.receipt.ContractAddress} }
 func (r *Receipt) GetGasUsed() int64            { return int64(r.receipt.GasUsed) }
+
+type Wallet struct {
+	wallet *accounts.Wallet
+}

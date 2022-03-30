@@ -19,24 +19,59 @@
 package geth
 
 import (
+	"fmt"
 	"math/big"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // Signer is an interface defining the callback when a contract requires a
 // method to sign the transaction before submission.
 type Signer interface {
 	Sign(addr *Address, unsignedTx *Transaction) (tx *Transaction, _ error)
+
+	EcRecover(data []byte, sig []byte) (addr *Address, _ error)
 }
 
 type MobileSigner struct {
 	sign bind.SignerFn
+}
+
+// EcRecover recovers the address associated with the given sig.
+// Only compatible with `text/plain`
+func (s *MobileSigner) EcRecover(data []byte, sig []byte) (addr *Address, _ error) {
+	// Returns the address for the Account that was used to create the signature.
+	//
+	// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
+	// the address of:
+	// hash = keccak256("\x19${byteVersion}Ethereum Signed Message:\n${message length}${message}")
+	// addr = ecrecover(hash, signature)
+	//
+	// Note, the signature must conform to the secp256k1 curve R, S and V values, where
+	// the V value must be be 27 or 28 for legacy reasons.
+	//
+	// https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_ecRecover
+	if len(sig) != 65 {
+		return &Address{}, fmt.Errorf("signature must be 65 bytes long")
+	}
+	if sig[64] != 27 && sig[64] != 28 {
+		return &Address{}, fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
+	}
+	sig[64] -= 27 // Transform yellow paper V from 27/28 to 0/1
+	hash := accounts.TextHash(data)
+	rpk, err := crypto.SigToPub(hash, sig)
+	if err != nil {
+		return &Address{}, err
+	}
+	commonAddress := crypto.PubkeyToAddress(*rpk)
+	return &Address{address: commonAddress}, nil
 }
 
 func (s *MobileSigner) Sign(addr *Address, unsignedTx *Transaction) (signedTx *Transaction, _ error) {
@@ -82,12 +117,12 @@ func NewTransactOpts() *TransactOpts {
 
 // NewKeyedTransactOpts is a utility method to easily create a transaction signer
 // from a single private key.
-func NewKeyedTransactOpts(keyJson []byte, passphrase string, chainID *big.Int) (*TransactOpts, error) {
+func NewKeyedTransactOpts(keyJson []byte, passphrase string, chainID *BigInt) (*TransactOpts, error) {
 	key, err := keystore.DecryptKey(keyJson, passphrase)
 	if err != nil {
 		return nil, err
 	}
-	auth, err := bind.NewKeyedTransactorWithChainID(key.PrivateKey, chainID)
+	auth, err := bind.NewKeyedTransactorWithChainID(key.PrivateKey, chainID.bigint)
 	if err != nil {
 		return nil, err
 	}
