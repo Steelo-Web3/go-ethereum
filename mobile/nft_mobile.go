@@ -28,237 +28,225 @@ var (
 	_ = event.NewSubscription
 )
 
-// NftMetaData contains all meta data concerning the Nft contract.
-var NftMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenTypeID\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"authorizedMinter\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"}],\"name\":\"createTokenType\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenTypeID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"}],\"name\":\"mintToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenHolder\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTypeURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTypes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"transferToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+// NFTMetaData contains all meta data concerning the NFT contract.
+var NFTMetaData = &bind.MetaData{
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"Burn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenTypeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"mintCount\",\"type\":\"uint256\"}],\"name\":\"Mint\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"}],\"name\":\"NewTokenType\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"burnToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenTypeID\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"authorizedMinter\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"createTokenType\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"issuer\",\"type\":\"address\"}],\"name\":\"getIssued\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"holder\",\"type\":\"address\"}],\"name\":\"getWalletTokens\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"issuerTokenTypes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenTypeID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"mintToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenHolder\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenMetadataURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTokenType\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"tokenTypeAuthorizedMinters\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTypeMetadataURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTypeMintCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenTypes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokens\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"transferToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"wallets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
-// NftABI is the input ABI used to generate the binding from.
-// Deprecated: Use NftMetaData.ABI instead.
-var NftABI = NftMetaData.ABI
+// NFTABI is the input ABI used to generate the binding from.
+// Deprecated: Use NFTMetaData.ABI instead.
+var NFTABI = NFTMetaData.ABI
 
-// Nft is an auto generated Go binding around an Ethereum contract.
-type Nft struct {
-	NftCaller     // Read-only binding to the contract
-	NftTransactor // Write-only binding to the contract
-	NftFilterer   // Log filterer for contract events
+
+// NFT is an auto generated Go binding around an Ethereum contract.
+type NFT struct {
+	contract *bind.BoundContract
 }
 
-// NftCaller is an auto generated read-only Go binding around an Ethereum contract.
-type NftCaller struct {
-	contract *BoundContract // Generic contract wrapper for the low level calls
-}
-
-// NftTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type NftTransactor struct {
-	contract *BoundContract // Generic contract wrapper for the low level calls
-}
-
-// NftFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type NftFilterer struct {
-	contract *BoundContract // Generic contract wrapper for the low level calls
-}
-
-// NftSession is an auto generated Go binding around an Ethereum contract,
+// NFTSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type NftSession struct {
-	Contract     *Nft         // Generic contract binding to set the session for
-	CallOpts     CallOpts     // Call options to use throughout this session
-	TransactOpts TransactOpts // Transaction auth options to use throughout this session
+type NFTSession struct {
+	contract     *NFT         // Generic contract binding to set the session for
+	callOpts     CallOpts     // Call options to use throughout this session
+	transactOpts TransactOpts // Transaction auth options to use throughout this session
 }
 
-// NftCallerSession is an auto generated read-only Go binding around an Ethereum contract,
-// with pre-set call options.
-type NftCallerSession struct {
-	Contract *NftCaller // Generic contract caller binding to set the session for
-	CallOpts CallOpts   // Call options to use throughout this session
-}
-
-// NftTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
-// with pre-set transact options.
-type NftTransactorSession struct {
-	Contract     *NftTransactor // Generic contract transactor binding to set the session for
-	TransactOpts TransactOpts   // Transaction auth options to use throughout this session
-}
-
-// NftRaw is an auto generated low-level Go binding around an Ethereum contract.
-type NftRaw struct {
-	Contract *Nft // Generic contract binding to access the raw methods on
-}
-
-// NftCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type NftCallerRaw struct {
-	Contract *NftCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// NftTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type NftTransactorRaw struct {
-	Contract *NftTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewNft creates a new instance of Nft, bound to a specific deployed contract.
-func NewNft(address Address, client *EthereumClient) (*Nft, error) {
-	contract, err := bindNft(address.address, client.client, client.client, client.client)
+// NewNFT creates a new instance of NFT, bound to a specific deployed contract.
+func NewNFT(address *Address, client *EthereumClient) (*NFT, error) {
+	contract, err := bindNFT(address.address, client.client, client.client, client.client)
 	if err != nil {
 		return nil, err
 	}
-	return &Nft{NftCaller: NftCaller{contract: contract}, NftTransactor: NftTransactor{contract: contract}, NftFilterer: NftFilterer{contract: contract}}, nil
+	return &NFT{contract: contract}, nil
 }
 
-// bindNft binds a generic wrapper to an already deployed contract.
-func bindNft(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(NftABI))
+// bindNFT binds a generic wrapper to an already deployed contract.
+func bindNFT(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(NFTABI))
 	if err != nil {
 		return nil, err
 	}
-	return &BoundContract{
-		contract: bind.NewBoundContract(address, parsed, caller, transactor, filterer),
+	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
+}
+
+// Call invokes the (constant) contract method with params as input values and
+// sets the output to result. The result type might be a single field for simple
+// returns, a slice of interfaces for anonymous returns and a struct for named
+// returns.
+func (_NFT *NFT) Call(opts *CallOpts, result *Interfaces, method string, params *Interfaces) error {
+	return _NFT.contract.Call(&opts.opts, &result.objects, method, params)
+}
+
+// Transfer initiates a plain transaction to move funds to the contract, calling
+// its default method if one is available.
+func (_NFT *NFT) Transfer(opts *TransactOpts) (*Transaction, error) {
+	tx, err := _NFT.contract.Transfer(&opts.opts)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{
+		tx: tx,
 	}, nil
 }
 
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Nft *NftRaw) Call(opts *CallOpts, result *Interfaces, method string, params *Interfaces) error {
-	return _Nft.Contract.NftCaller.contract.Call(opts, result, method, params)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Nft *NftRaw) Transfer(opts *TransactOpts) (*Transaction, error) {
-	return _Nft.Contract.NftTransactor.contract.Transfer(opts)
-}
-
 // Transact invokes the (paid) contract method with params as input values.
-func (_Nft *NftRaw) Transact(opts *TransactOpts, method string, params *Interfaces) (*Transaction, error) {
-	return _Nft.Contract.NftTransactor.contract.Transact(opts, method, params)
+func (_NFT *NFT) Transact(opts *TransactOpts, method string, params *Interfaces) (*Transaction, error) {
+	tx, err := _NFT.contract.Transact(&opts.opts, method, params.objects)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{
+		tx: tx,
+	}, nil
 }
 
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Nft *NftCallerRaw) Call(opts *CallOpts, result *Interfaces, method string, params *Interfaces) error {
-	return _Nft.Contract.contract.Call(opts, result, method, params)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Nft *NftTransactorRaw) Transfer(opts *TransactOpts) (*Transaction, error) {
-	return _Nft.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Nft *NftTransactorRaw) Transact(opts *TransactOpts, method string, params *Interfaces) (*Transaction, error) {
-	return _Nft.Contract.contract.Transact(opts, method, params)
-}
-
-// TokenHolder is a free data retrieval call binding the contract method 0x862a4bf2.
+// GetIssued is a free data retrieval call binding the contract method 0xe895bc2f.
 //
-// Solidity: function tokenHolder(uint256 ) view returns(address)
-func (_Nft *NftCaller) TokenHolder(opts *CallOpts, arg0 *BigInt) (Address, error) {
-	var out Interfaces
-	err := _Nft.contract.Call(opts, &out, "tokenHolder", &Interfaces{objects: []interface{}{arg0}})
+// Solidity: function getIssued(address issuer) view returns(uint256[])
+func (_NFT *NFT) GetIssued(opts *CallOpts, issuer *Address) (*BigInts, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "getIssued", issuer.address)
 
 	if err != nil {
-		return *new(Address), err
+		return *new(*BigInts), err
 	}
 
-	out0 := *abi.ConvertType(out.objects[0], new(Address)).(*Address)
+	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
 
-	return out0, err
+	return &BigInts{bigints: out0}, nil
 
 }
 
-// TokenHolder is a free data retrieval call binding the contract method 0x862a4bf2.
+// GetWalletTokens is a free data retrieval call binding the contract method 0xfabc38be.
 //
-// Solidity: function tokenHolder(uint256 ) view returns(address)
-func (_Nft *NftSession) TokenHolder(arg0 *BigInt) (Address, error) {
-	return _Nft.Contract.TokenHolder(&_Nft.CallOpts, arg0)
-}
-
-// TokenHolder is a free data retrieval call binding the contract method 0x862a4bf2.
-//
-// Solidity: function tokenHolder(uint256 ) view returns(address)
-func (_Nft *NftCallerSession) TokenHolder(arg0 *BigInt) (Address, error) {
-	return _Nft.Contract.TokenHolder(&_Nft.CallOpts, arg0)
-}
-
-// TokenTypeURI is a free data retrieval call binding the contract method 0x885a72a9.
-//
-// Solidity: function tokenTypeURI(uint256 ) view returns(string)
-func (_Nft *NftCaller) TokenTypeURI(opts *CallOpts, arg0 *BigInt) (string, error) {
-	var out Interfaces
-	err := _Nft.contract.Call(opts, &out, "tokenTypeURI", &Interfaces{objects: []interface{}{arg0}})
+// Solidity: function getWalletTokens(address holder) view returns(uint256[])
+func (_NFT *NFT) GetWalletTokens(opts *CallOpts, holder *Address) (*BigInts, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "getWalletTokens", holder.address)
 
 	if err != nil {
-		return *new(string), err
+		return *new(*BigInts), err
 	}
 
-	out0 := *abi.ConvertType(out.objects[0], new(string)).(*string)
+	out0 := *abi.ConvertType(out[0], new([]*big.Int)).(*[]*big.Int)
 
-	return out0, err
+	return &BigInts{bigints: out0}, nil
 
 }
 
-// TokenTypeURI is a free data retrieval call binding the contract method 0x885a72a9.
+// IssuerTokenTypes is a free data retrieval call binding the contract method 0x18130d4f.
 //
-// Solidity: function tokenTypeURI(uint256 ) view returns(string)
-func (_Nft *NftSession) TokenTypeURI(arg0 *BigInt) (string, error) {
-	return _Nft.Contract.TokenTypeURI(&_Nft.CallOpts, arg0)
+// Solidity: function issuerTokenTypes(address ) view returns(uint256 count)
+func (_NFT *NFT) IssuerTokenTypes(opts *CallOpts, arg0 *Address) (*BigInt, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "issuerTokenTypes", arg0.address)
+
+	if err != nil {
+		return *new(*BigInt), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return &BigInt{bigint: out0}, nil
+
 }
 
-// TokenTypeURI is a free data retrieval call binding the contract method 0x885a72a9.
+// Wallets is a free data retrieval call binding the contract method 0x89b08f11.
 //
-// Solidity: function tokenTypeURI(uint256 ) view returns(string)
-func (_Nft *NftCallerSession) TokenTypeURI(arg0 *BigInt) (string, error) {
-	return _Nft.Contract.TokenTypeURI(&_Nft.CallOpts, arg0)
+// Solidity: function wallets(address ) view returns(uint256 count)
+func (_NFT *NFT) Wallets(opts *CallOpts, arg0 Address) (*BigInt, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "wallets", arg0.address)
+
+	if err != nil {
+		return *new(*BigInt), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return &BigInt{bigint: out0}, nil
 }
 
-// TokenTypes is a free data retrieval call binding the contract method 0x33f6832a.
+// TokenHolder is a free data retrieval call binding the contract method 0x862a4bf2.
 //
-// Solidity: function tokenTypes(uint256 ) view returns(bool)
-func (_Nft *NftCaller) TokenTypes(opts *CallOpts, arg0 *BigInt) (bool, error) {
-	var out Interfaces
-	err := _Nft.contract.Call(opts, &out, "tokenTypes", &Interfaces{objects: []interface{}{arg0}})
+// Solidity: function tokenHolder(uint256 ) view returns(address)
+func (_NFT *NFT) TokenHolder(opts *CallOpts, arg0 *BigInt) (*Address, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenHolder", arg0.bigint)
+
+	if err != nil {
+		return *new(*Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return &Address{address: out0}, err
+
+}
+
+// TokenTokenType is a free data retrieval call binding the contract method 0xfd2da784.
+//
+// Solidity: function tokenTokenType(uint256 ) view returns(uint256)
+func (_NFT *NFT) TokenTokenType(opts *CallOpts, arg0 *BigInt) (*BigInt, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenTokenType", arg0.bigint)
+
+	if err != nil {
+		return *new(*BigInt), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return &BigInt{bigint: out0}, err
+
+}
+
+// TokenTypeAuthorizedMinters is a free data retrieval call binding the contract method 0xca0cdc24.
+//
+// Solidity: function tokenTypeAuthorizedMinters(uint256 , address ) view returns(bool)
+func (_NFT *NFT) TokenTypeAuthorizedMinters(opts *CallOpts, arg0 *BigInt, arg1 *Address) (bool, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenTypeAuthorizedMinters", arg0.bigint, arg1.address)
 
 	if err != nil {
 		return *new(bool), err
 	}
 
-	out0 := *abi.ConvertType(out.objects[0], new(bool)).(*bool)
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
 
 	return out0, err
 
 }
 
-// TokenTypes is a free data retrieval call binding the contract method 0x33f6832a.
+// TokenTypeURI is a free data retrieval call binding the contract method 0x885a72a9.
 //
-// Solidity: function tokenTypes(uint256 ) view returns(bool)
-func (_Nft *NftSession) TokenTypes(arg0 *BigInt) (bool, error) {
-	return _Nft.Contract.TokenTypes(&_Nft.CallOpts, arg0)
-}
-
-// TokenTypes is a free data retrieval call binding the contract method 0x33f6832a.
-//
-// Solidity: function tokenTypes(uint256 ) view returns(bool)
-func (_Nft *NftCallerSession) TokenTypes(arg0 *BigInt) (bool, error) {
-	return _Nft.Contract.TokenTypes(&_Nft.CallOpts, arg0)
-}
-
-// TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
-//
-// Solidity: function tokenURI(uint256 ) view returns(string)
-func (_Nft *NftCaller) TokenURI(opts *CallOpts, arg0 *BigInt) (string, error) {
-	var out Interfaces
-	err := _Nft.contract.Call(opts, &out, "tokenURI", &Interfaces{objects: []interface{}{arg0}})
+// Solidity: function tokenTypeURI(uint256 ) view returns(string)
+func (_NFT *NFT) TokenTypeURI(opts *CallOpts, arg0 *BigInt) (string, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenTypeURI", arg0.bigint)
 
 	if err != nil {
 		return *new(string), err
 	}
 
-	out0 := *abi.ConvertType(out.objects[0], new(string)).(*string)
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// TokenTypes is a free data retrieval call binding the contract method 0x33f6832a.
+//
+// Solidity: function tokenTypes(uint256 ) view returns(bool)
+func (_NFT *NFT) TokenTypes(opts *CallOpts, arg0 *BigInt) (bool, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenTypes", arg0.bigint)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
 
 	return out0, err
 
@@ -267,76 +255,77 @@ func (_Nft *NftCaller) TokenURI(opts *CallOpts, arg0 *BigInt) (string, error) {
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 ) view returns(string)
-func (_Nft *NftSession) TokenURI(arg0 *BigInt) (string, error) {
-	return _Nft.Contract.TokenURI(&_Nft.CallOpts, arg0)
+func (_NFT *NFT) TokenURI(opts *CallOpts, arg0 *BigInt) (string, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenURI", arg0.bigint)
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
 }
 
-// TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
+// Tokens is a free data retrieval call binding the contract method 0x4f64b2be.
 //
-// Solidity: function tokenURI(uint256 ) view returns(string)
-func (_Nft *NftCallerSession) TokenURI(arg0 *BigInt) (string, error) {
-	return _Nft.Contract.TokenURI(&_Nft.CallOpts, arg0)
+// Solidity: function tokens(uint256 ) view returns(bool)
+func (_NFT *NFT) Tokens(opts *CallOpts, arg0 *BigInt) (bool, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(&opts.opts, &out, "tokens", arg0.bigint)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
 }
 
 // CreateTokenType is a paid mutator transaction binding the contract method 0x9799e525.
 //
 // Solidity: function createTokenType(uint256 tokenTypeID, address authorizedMinter, string uri) returns()
-func (_Nft *NftTransactor) CreateTokenType(opts *TransactOpts, tokenTypeID *BigInt, authorizedMinter Address, uri string) (*Transaction, error) {
-	return _Nft.contract.Transact(opts, "createTokenType", &Interfaces{objects: []interface{}{tokenTypeID, authorizedMinter, uri}})
-}
-
-// CreateTokenType is a paid mutator transaction binding the contract method 0x9799e525.
-//
-// Solidity: function createTokenType(uint256 tokenTypeID, address authorizedMinter, string uri) returns()
-func (_Nft *NftSession) CreateTokenType(tokenTypeID *BigInt, authorizedMinter Address, uri string) (*Transaction, error) {
-	return _Nft.Contract.CreateTokenType(&_Nft.TransactOpts, tokenTypeID, authorizedMinter, uri)
-}
-
-// CreateTokenType is a paid mutator transaction binding the contract method 0x9799e525.
-//
-// Solidity: function createTokenType(uint256 tokenTypeID, address authorizedMinter, string uri) returns()
-func (_Nft *NftTransactorSession) CreateTokenType(tokenTypeID *BigInt, authorizedMinter Address, uri string) (*Transaction, error) {
-	return _Nft.Contract.CreateTokenType(&_Nft.TransactOpts, tokenTypeID, authorizedMinter, uri)
+func (_NFT *NFT) CreateTokenType(opts *TransactOpts, tokenTypeID *BigInt, authorizedMinter *Address, uri string) (*Transaction, error) {
+	tx, err := _NFT.contract.Transact(&opts.opts, "createTokenType", tokenTypeID.bigint, authorizedMinter.address, uri)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{tx: tx}, nil
 }
 
 // MintToken is a paid mutator transaction binding the contract method 0x87c6649c.
 //
 // Solidity: function mintToken(address to, uint256 tokenTypeID, uint256 tokenID, string uri) returns()
-func (_Nft *NftTransactor) MintToken(opts *TransactOpts, to Address, tokenTypeID *BigInt, tokenID *BigInt, uri string) (*Transaction, error) {
-	return _Nft.contract.Transact(opts, "mintToken", &Interfaces{objects: []interface{}{to.address, tokenTypeID.bigint, tokenID.bigint, uri}})
-}
-
-// MintToken is a paid mutator transaction binding the contract method 0x87c6649c.
-//
-// Solidity: function mintToken(address to, uint256 tokenTypeID, uint256 tokenID, string uri) returns()
-func (_Nft *NftSession) MintToken(to Address, tokenTypeID *BigInt, tokenID *BigInt, uri string) (*Transaction, error) {
-	return _Nft.Contract.MintToken(&_Nft.TransactOpts, to, tokenTypeID, tokenID, uri)
-}
-
-// MintToken is a paid mutator transaction binding the contract method 0x87c6649c.
-//
-// Solidity: function mintToken(address to, uint256 tokenTypeID, uint256 tokenID, string uri) returns()
-func (_Nft *NftTransactorSession) MintToken(to Address, tokenTypeID *BigInt, tokenID *BigInt, uri string) (*Transaction, error) {
-	return _Nft.Contract.MintToken(&_Nft.TransactOpts, to, tokenTypeID, tokenID, uri)
+func (_NFT *NFT) MintToken(opts *TransactOpts, to *Address, tokenTypeID *BigInt, tokenID *BigInt, uri string) (*Transaction, error) {
+	tx, err := _NFT.contract.Transact(&opts.opts, "mintToken", to.address, tokenTypeID.bigint, tokenID.bigint, uri)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{tx: tx}, nil
 }
 
 // TransferToken is a paid mutator transaction binding the contract method 0x1072cbea.
 //
 // Solidity: function transferToken(address to, uint256 tokenID) returns()
-func (_Nft *NftTransactor) TransferToken(opts *TransactOpts, to Address, tokenID *BigInt) (*Transaction, error) {
-	return _Nft.contract.Transact(opts, "transferToken", &Interfaces{objects: []interface{}{to.address, tokenID.bigint}})
+func (_NFT *NFT) TransferToken(opts *TransactOpts, to *Address, tokenID *BigInt) (*Transaction, error) {
+	tx, err := _NFT.contract.Transact(&opts.opts, "transferToken", to.address, tokenID.bigint)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{tx: tx}, nil
 }
 
-// TransferToken is a paid mutator transaction binding the contract method 0x1072cbea.
+// BurnToken is a paid mutator transaction binding the contract method 0x7b47ec1a.
 //
-// Solidity: function transferToken(address to, uint256 tokenID) returns()
-func (_Nft *NftSession) TransferToken(to Address, tokenID *BigInt) (*Transaction, error) {
-	return _Nft.Contract.TransferToken(&_Nft.TransactOpts, to, tokenID)
-}
-
-// TransferToken is a paid mutator transaction binding the contract method 0x1072cbea.
-//
-// Solidity: function transferToken(address to, uint256 tokenID) returns()
-func (_Nft *NftTransactorSession) TransferToken(to Address, tokenID *BigInt) (*Transaction, error) {
-	return _Nft.Contract.TransferToken(&_Nft.TransactOpts, to, tokenID)
+// Solidity: function burnToken(uint256 tokenID) returns()
+func (_NFT *NFT) BurnToken(opts *TransactOpts, tokenID *BigInt) (*Transaction, error) {
+	tx, err := _NFT.contract.Transact(&opts.opts, "burnToken", tokenID.bigint)
+	if err != nil {
+		return nil, err
+	}
+	return &Transaction{tx: tx}, nil
 }

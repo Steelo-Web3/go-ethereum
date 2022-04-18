@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/params"
 	"net"
 	"strings"
 	"time"
@@ -27,7 +28,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/params"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -276,7 +276,7 @@ func listen(ln *enode.LocalNode, addr string) *net.UDPConn {
 }
 
 func parseBootnodes(ctx *cli.Context) ([]*enode.Node, error) {
-	s := params.RinkebyBootnodes
+	s := params.Bootnodes
 	if ctx.IsSet(bootnodesFlag.Name) {
 		input := ctx.String(bootnodesFlag.Name)
 		if input == "" {
