@@ -234,12 +234,6 @@ web3._extend({
 			params: 1
 		}),
 		new web3._extend.Method({
-			name: 'testSignCliqueBlock',
-			call: 'debug_testSignCliqueBlock',
-			params: 2,
-			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null],
-		}),
-		new web3._extend.Method({
 			name: 'setHead',
 			call: 'debug_setHead',
 			params: 1
@@ -470,6 +464,11 @@ web3._extend({
 			call: 'debug_getAccessibleState',
 			params: 2,
 			inputFormatter:[web3._extend.formatters.inputBlockNumberFormatter, web3._extend.formatters.inputBlockNumberFormatter],
+		}),
+		new web3._extend.Method({
+			name: 'dbGet',
+			call: 'debug_dbGet',
+			params: 1
 		}),
 	],
 	properties: []
