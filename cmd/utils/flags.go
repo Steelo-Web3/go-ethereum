@@ -66,7 +66,6 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/enode"
 	"github.com/ethereum/go-ethereum/p2p/nat"
 	"github.com/ethereum/go-ethereum/p2p/netutil"
-	"github.com/ethereum/go-ethereum/params"
 	pcsclite "github.com/gballet/go-libpcsclite"
 	gopsutil "github.com/shirou/gopsutil/mem"
 	"gopkg.in/urfave/cli.v1"
@@ -917,20 +916,10 @@ func setNodeUserIdent(ctx *cli.Context, cfg *node.Config) {
 // setBootstrapNodes creates a list of bootstrap nodes from the command line
 // flags, reverting to pre-configured ones if none have been specified.
 func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
-	urls := params.MainnetBootnodes
+	var urls []string
 	switch {
 	case ctx.GlobalIsSet(BootnodesFlag.Name):
 		urls = SplitAndTrim(ctx.GlobalString(BootnodesFlag.Name))
-	case ctx.GlobalBool(RopstenFlag.Name):
-		urls = params.RopstenBootnodes
-	case ctx.GlobalBool(SepoliaFlag.Name):
-		urls = params.SepoliaBootnodes
-	case ctx.GlobalBool(RinkebyFlag.Name):
-		urls = params.RinkebyBootnodes
-	case ctx.GlobalBool(GoerliFlag.Name):
-		urls = params.GoerliBootnodes
-	case ctx.GlobalBool(KilnFlag.Name):
-		urls = params.KilnBootnodes
 	case cfg.BootstrapNodes != nil:
 		return // already set, don't apply defaults.
 	}
@@ -1680,42 +1669,6 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	}
 	// Override any default configs for hard coded networks.
 	switch {
-	case ctx.GlobalBool(MainnetFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 1
-		}
-		cfg.Genesis = core.DefaultGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
-	case ctx.GlobalBool(RopstenFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 3
-		}
-		cfg.Genesis = core.DefaultRopstenGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
-	case ctx.GlobalBool(SepoliaFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 11155111
-		}
-		cfg.Genesis = core.DefaultSepoliaGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.SepoliaGenesisHash)
-	case ctx.GlobalBool(RinkebyFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 4
-		}
-		cfg.Genesis = core.DefaultRinkebyGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.RinkebyGenesisHash)
-	case ctx.GlobalBool(GoerliFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 5
-		}
-		cfg.Genesis = core.DefaultGoerliGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.GoerliGenesisHash)
-	case ctx.GlobalBool(KilnFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 1337802
-		}
-		cfg.Genesis = core.DefaultKilnGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.KilnGenesisHash)
 	case ctx.GlobalBool(DeveloperFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 1337
@@ -1770,25 +1723,6 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 			cfg.Miner.GasPrice = big.NewInt(1)
 		}
 	default:
-		if cfg.NetworkId == 1 {
-			SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
-		}
-	}
-}
-
-// SetDNSDiscoveryDefaults configures DNS discovery with the given URL if
-// no URLs are set.
-func SetDNSDiscoveryDefaults(cfg *ethconfig.Config, genesis common.Hash) {
-	if cfg.EthDiscoveryURLs != nil {
-		return // already set through flags/config
-	}
-	protocol := "all"
-	if cfg.SyncMode == downloader.LightSync {
-		protocol = "les"
-	}
-	if url := params.KnownDNSNetwork(genesis, protocol); url != "" {
-		cfg.EthDiscoveryURLs = []string{url}
-		cfg.SnapDiscoveryURLs = cfg.EthDiscoveryURLs
 	}
 }
 

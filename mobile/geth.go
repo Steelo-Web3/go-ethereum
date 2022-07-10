@@ -77,7 +77,6 @@ type NodeConfig struct {
 // defaultNodeConfig contains the default node configuration values to use if all
 // or some fields are missing from the user's specified list.
 var defaultNodeConfig = &NodeConfig{
-	BootstrapNodes:        Bootnodes(),
 	MaxPeers:              25,
 	EthereumEnabled:       true,
 	EthereumNetworkID:     1,

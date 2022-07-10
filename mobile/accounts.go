@@ -21,15 +21,8 @@ package geth
 
 import (
 	"errors"
-	"fmt"
-	"time"
-
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-
-	"golang.org/x/crypto/sha3"
 )
 
 const (
@@ -56,6 +49,15 @@ const (
 
 // Account represents a stored key.
 type Account struct{ account accounts.Account }
+
+func NewAccount(address Address, url URL) Account {
+	return Account{
+		accounts.Account{
+			Address: address.address,
+			URL:     url.url,
+		},
+	}
+}
 
 // Accounts represents a slice of accounts.
 type Accounts struct{ accounts []accounts.Account }
@@ -90,214 +92,4 @@ func (a *Account) GetAddress() *Address {
 // GetURL retrieves the canonical URL of the account.
 func (a *Account) GetURL() string {
 	return a.account.URL.String()
-}
-
-// KeyStore manages a key storage directory on disk.
-type KeyStore struct{ keystore *keystore.KeyStore }
-
-// NewKeyStore creates a keystore for the given directory.
-func NewKeyStore(keydir string, scryptN, scryptP int) *KeyStore {
-	return &KeyStore{keystore: keystore.NewKeyStore(keydir, scryptN, scryptP)}
-}
-
-// HasAddress reports whether a key with the given address is present.
-func (ks *KeyStore) HasAddress(address *Address) bool {
-	return ks.keystore.HasAddress(address.address)
-}
-
-// GetAccounts returns all key files present in the directory.
-func (ks *KeyStore) GetAccounts() *Accounts {
-	return &Accounts{ks.keystore.Accounts()}
-}
-
-// DeleteAccount deletes the key matched by account if the passphrase is correct.
-// If a contains no filename, the address must match a unique key.
-func (ks *KeyStore) DeleteAccount(account *Account, passphrase string) error {
-	return ks.keystore.Delete(account.account, passphrase)
-}
-
-// TextHash is a helper function that calculates a hash for the given message that can be
-// safely used to calculate a signature from.
-//
-// The hash is calculated as
-//   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
-//
-// This gives context to the signed message and prevents signing of transactions.
-func TextHash(data []byte) []byte {
-	hash, _ := textAndHash(data)
-	return hash
-}
-
-// TextAndHash is a helper function that calculates a hash for the given message that can be
-// safely used to calculate a signature from.
-//
-// The hash is calculated as
-//   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
-//
-// This gives context to the signed message and prevents signing of transactions.
-func textAndHash(data []byte) ([]byte, string) {
-	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), string(data))
-	hasher := sha3.NewLegacyKeccak256()
-	hasher.Write([]byte(msg))
-	return hasher.Sum(nil), msg
-}
-
-func MsgFmt(data []byte) string {
-	return fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), string(data))
-}
-
-// Returns the address for the Account that was used to create the signature.
-//
-// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
-// the address of:
-// hash = keccak256("\x19${byteVersion}Ethereum Signed Message:\n${message length}${message}")
-// addr = ecrecover(hash, signature)
-//
-// Note, the signature must conform to the secp256k1 curve R, S and V values, where
-// the V value must be be 27 or 28 for legacy reasons.
-//
-// https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_ecRecover
-func EcRecover(data []byte, sig []byte) (addr *Address, _ error) {
-	if len(sig) != 65 {
-		return &Address{}, fmt.Errorf("signature must be 65 bytes long")
-	}
-	if sig[64] != 27 && sig[64] != 28 {
-		return &Address{}, fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
-	}
-	sig[64] -= 27 // Transform yellow paper V from 27/28 to 0/1
-	hash := TextHash(data)
-	rpk, err := crypto.SigToPub(hash, sig)
-	if err != nil {
-		return &Address{}, err
-	}
-	commonAddress := crypto.PubkeyToAddress(*rpk)
-	return &Address{address: commonAddress}, nil
-}
-
-// SignHash calculates a ECDSA signature for the given hash. The produced signature
-// is in the [R || S || V] format where V is 0 or 1.
-func (ks *KeyStore) SignHash(address *Address, hash []byte) (signature []byte, _ error) {
-	return ks.keystore.SignHash(accounts.Account{Address: address.address}, common.CopyBytes(hash))
-}
-
-// SignTx signs the given transaction with the requested account.
-func (ks *KeyStore) SignTx(account *Account, tx *Transaction, chainID *BigInt) (*Transaction, error) {
-	if chainID == nil { // Null passed from mobile app
-		chainID = new(BigInt)
-	}
-	signed, err := ks.keystore.SignTx(account.account, tx.tx, chainID.bigint)
-	if err != nil {
-		return nil, err
-	}
-	return &Transaction{signed}, nil
-}
-
-// SignHashPassphrase signs hash if the private key matching the given address can
-// be decrypted with the given passphrase. The produced signature is in the
-// [R || S || V] format where V is 0 or 1.
-func (ks *KeyStore) SignHashPassphrase(account *Account, passphrase string, hash []byte) (signature []byte, _ error) {
-	return ks.keystore.SignHashWithPassphrase(account.account, passphrase, common.CopyBytes(hash))
-}
-
-// SignTxPassphrase signs the transaction if the private key matching the
-// given address can be decrypted with the given passphrase.
-func (ks *KeyStore) SignTxPassphrase(account *Account, passphrase string, tx *Transaction, chainID *BigInt) (*Transaction, error) {
-	if chainID == nil { // Null passed from mobile app
-		chainID = new(BigInt)
-	}
-	signed, err := ks.keystore.SignTxWithPassphrase(account.account, passphrase, tx.tx, chainID.bigint)
-	if err != nil {
-		return nil, err
-	}
-	return &Transaction{signed}, nil
-}
-
-// Unlock unlocks the given account indefinitely.
-func (ks *KeyStore) Unlock(account *Account, passphrase string) error {
-	return ks.keystore.TimedUnlock(account.account, passphrase, 0)
-}
-
-// Lock removes the private key with the given address from memory.
-func (ks *KeyStore) Lock(address *Address) error {
-	return ks.keystore.Lock(address.address)
-}
-
-// TimedUnlock unlocks the given account with the passphrase. The account stays
-// unlocked for the duration of timeout (nanoseconds). A timeout of 0 unlocks the
-// account until the program exits. The account must match a unique key file.
-//
-// If the account address is already unlocked for a duration, TimedUnlock extends or
-// shortens the active unlock timeout. If the address was previously unlocked
-// indefinitely the timeout is not altered.
-func (ks *KeyStore) TimedUnlock(account *Account, passphrase string, timeout int64) error {
-	return ks.keystore.TimedUnlock(account.account, passphrase, time.Duration(timeout))
-}
-
-// NewAccount generates a new key and stores it into the key directory,
-// encrypting it with the passphrase.
-func (ks *KeyStore) NewAccount(passphrase string) (*Account, error) {
-	account, err := ks.keystore.NewAccount(passphrase)
-	if err != nil {
-		return nil, err
-	}
-	return &Account{account}, nil
-}
-
-// UpdateAccount changes the passphrase of an existing account.
-func (ks *KeyStore) UpdateAccount(account *Account, passphrase, newPassphrase string) error {
-	return ks.keystore.Update(account.account, passphrase, newPassphrase)
-}
-
-// ExportKey exports as a JSON key, encrypted with newPassphrase.
-func (ks *KeyStore) ExportKey(account *Account, passphrase, newPassphrase string) (key []byte, _ error) {
-	return ks.keystore.Export(account.account, passphrase, newPassphrase)
-}
-
-// ImportKey stores the given encrypted JSON key into the key directory.
-func (ks *KeyStore) ImportKey(keyJSON []byte, passphrase, newPassphrase string) (account *Account, _ error) {
-	acc, err := ks.keystore.Import(common.CopyBytes(keyJSON), passphrase, newPassphrase)
-	if err != nil {
-		return nil, err
-	}
-	return &Account{acc}, nil
-}
-
-// ImportECDSAKey stores the given encrypted JSON key into the key directory.
-func (ks *KeyStore) ImportECDSAKey(key []byte, passphrase string) (account *Account, _ error) {
-	privkey, err := crypto.ToECDSA(common.CopyBytes(key))
-	if err != nil {
-		return nil, err
-	}
-	acc, err := ks.keystore.ImportECDSA(privkey, passphrase)
-	if err != nil {
-		return nil, err
-	}
-	return &Account{acc}, nil
-}
-
-// ImportPreSaleKey decrypts the given Ethereum presale wallet and stores
-// a key file in the key directory. The key file is encrypted with the same passphrase.
-func (ks *KeyStore) ImportPreSaleKey(keyJSON []byte, passphrase string) (ccount *Account, _ error) {
-	account, err := ks.keystore.ImportPreSaleKey(common.CopyBytes(keyJSON), passphrase)
-	if err != nil {
-		return nil, err
-	}
-	return &Account{account}, nil
-}
-
-func (ks *KeyStore) IsUnlocked(account *Account) int {
-	wallets := ks.keystore.Wallets()
-	for _, wallet := range wallets {
-		if wallet.Contains(account.account) {
-			status, err := wallet.Status()
-			if err != nil {
-				return AccountStatus_NotFound
-			}
-			if status == "Unlocked" {
-				return AccountStatus_Unlocked
-			}
-			return AccountStatus_Locked
-		}
-	}
-	return AccountStatus_NotFound
 }

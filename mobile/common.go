@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
@@ -137,6 +138,10 @@ func (h *Hashes) Append(hash *Hash) {
 // Address represents the 20 byte address of an Ethereum account.
 type Address struct {
 	address common.Address
+}
+
+type URL struct {
+	url accounts.URL
 }
 
 // NewAddressFromBytes converts a slice of bytes to a hash value.

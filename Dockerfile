@@ -14,16 +14,16 @@ COPY go.sum /go-ethereum/
 RUN cd /go-ethereum && go mod download
 
 ADD . /go-ethereum
-RUN cd /go-ethereum && go run build/ci.go install ./cmd/geth
+RUN cd /go-ethereum && go run build/ci.go install ./cmd/clef
 
 # Pull Geth into a second stage deploy alpine container
 FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates
-COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
+COPY --from=builder /go-ethereum/build/bin/clef /usr/local/bin/
 
-EXPOSE 8545 8546 30303 30303/udp
-ENTRYPOINT ["geth"]
+EXPOSE 8550
+ENTRYPOINT ["clef"]
 
 # Add some metadata labels to help programatic image consumption
 ARG COMMIT=""
