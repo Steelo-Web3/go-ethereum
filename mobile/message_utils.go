@@ -53,10 +53,6 @@ func EcRecover(data []byte, sig []byte) (addr *Address, _ error) {
 	if len(sig) != 65 {
 		return &Address{}, fmt.Errorf("signature must be 65 bytes long")
 	}
-	if sig[64] != 27 && sig[64] != 28 {
-		return &Address{}, fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
-	}
-	sig[64] -= 27 // Transform yellow paper V from 27/28 to 0/1
 	hash := TextHash(data)
 	rpk, err := crypto.SigToPub(hash, sig)
 	if err != nil {

@@ -267,7 +267,7 @@ func (_NFT *NFT) TokenURI(opts *CallOpts, arg0 *BigInt) (string, error) {
 // Solidity: function tokenTypeMintCount(uint256 ) view returns(uint256)
 func (_NFT *NFT) TokenTypeMintCount(opts *CallOpts, arg0 *BigInt) (*BigInt, error) {
 	var out []interface{}
-	err := _NFT.contract.Call(&opts.opts, &out, "tokenTypeMintCount", arg0)
+	err := _NFT.contract.Call(&opts.opts, &out, "tokenTypeMintCount", arg0.bigint)
 
 	if err != nil {
 		return *new(*BigInt), err
