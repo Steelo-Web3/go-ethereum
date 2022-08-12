@@ -6,13 +6,13 @@ on:
       - master
 
 env:
-  AWS_REGION: us-east-1                  
-  ECR_REPOSITORY: steelo-openbooks           
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: steelo-openbooks
   ECS_SERVICE: geth-rpc-service
   ECS_CLUSTER: geth-rpc-cluster
   ECS_TASK_DEFINITION: .aws/geth_rpc_task.json
 
-  CONTAINER_NAME: geth-rpc          
+  CONTAINER_NAME: geth-rpc
 
 jobs:
   deploy:
