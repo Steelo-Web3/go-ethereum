@@ -1,7 +1,11 @@
 **/*_test.go
 
+.idea
+
 build/_workspace
 build/_bin
 tests/testdata
 *.tar
 geth
+
+mobile

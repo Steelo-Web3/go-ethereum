@@ -20,6 +20,7 @@ package geth
 
 import (
 	"errors"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 
 	"github.com/ethereum/go-ethereum/core/types"
 )
@@ -53,4 +54,31 @@ func (l *Logs) Get(index int) (log *Log, _ error) {
 		return nil, errors.New("index out of bounds")
 	}
 	return &Log{l.logs[index]}, nil
+}
+
+type FilterOpts struct {
+	opts *bind.FilterOpts
+}
+
+func (f *FilterOpts) New(start int, end int, ctx *Context) *FilterOpts {
+	_end := uint64(end)
+	return &FilterOpts{
+		opts: &bind.FilterOpts{
+			Start:   uint64(start),
+			End:     &_end,
+			Context: ctx.context,
+		},
+	}
+}
+
+type WatchOpts struct {
+	opts *bind.WatchOpts
+}
+
+func (f *WatchOpts) New(start int, ctx *Context) *WatchOpts {
+	_start := uint64(start)
+	return &WatchOpts{opts: &bind.WatchOpts{
+		Start:   &_start,
+		Context: ctx.context,
+	}}
 }
